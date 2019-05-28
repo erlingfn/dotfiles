@@ -116,22 +116,6 @@ if [ -f ~/.zsh/zsh-vcs-prompt/zshrc.sh ]; then
         && PS1="$PS1"'\[\e[1;31m\]$(vcs_super_info)\[\e[0;m\]'
 fi
 
-# display git branch
-
-git_branch() {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
-
-export PS1="[\u@\h \W]\[\033[00;32m\]\$(git_branch)\[\033[00m\]\$ "
-
-if [ -f `which powerline-daemon`  ]; then
-    powerline-daemon -q
-    POWERLINE_BASH_CONTINUATION=1
-    POWERLINE_BASH_SELECT=1
-    . /usr/share/powerline/bash/powerline.sh
-fi
-
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
