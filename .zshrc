@@ -4,12 +4,11 @@
 # Path to your oh-my-zsh installation.
   export ZSH="/home/erling/.oh-my-zsh"
 
-  ZSH_THEME="agnoster"
-
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+ZSH_THEME="agnoster"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -27,8 +26,14 @@
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
 
+# Uncomment the following line to automatically update without prompting.
+# DISABLE_UPDATE_PROMPT="true"
+
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS=true
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -71,9 +76,7 @@ plugins=(
 
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && . ~/.autojump/etc/profile.d/autojump.sh #enable autojump
 
-
 source $ZSH/oh-my-zsh.sh
-
 
 # User configuration
 #
@@ -95,8 +98,6 @@ prompt_end() {
   #Adds the new line and ➜ as the start character.
   printf "\n ➜";
 }
-
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -106,16 +107,11 @@ prompt_end() {
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
  else
-   export EDITOR='vim'
+   export EDITOR='mvim'
  fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-#
-
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -125,13 +121,5 @@ prompt_end() {
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-#
-export TERM="screen-256color"
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PASSWORD_STORE_DIR="/home/erling/koding/webkom/password-store"
-
-export PATH="/home/erling/.yarn/bin:/home/erling/.config/yarn/global/node_modules/.bin:/home/erling/.autojump/bin:/home/erling/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-11-oracle/bin:/usr/lib/jvm/java-11-oracle/db/bin:/home/erling/.vimpkg/bin"
-
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

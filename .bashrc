@@ -72,10 +72,6 @@ xterm*|rxvt*)
     ;;
 esac
 
-# If not running interactively, do not do anything
-[[ $- != *i* ]] && return
-[[ -z "$TMUX" ]] && exec tmux
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -109,13 +105,6 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-#source zshrc
-
-if [ -f ~/.zsh/zsh-vcs-prompt/zshrc.sh ]; then
-    source ~/.zsh/zsh-vcs-prompt/zshrc.sh 2> /dev/null \
-        && PS1="$PS1"'\[\e[1;31m\]$(vcs_super_info)\[\e[0;m\]'
-fi
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -126,9 +115,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-export VISUAL=vim
-export EDITOR="$VISUAL"
-
-export PATH="/home/erling/.yarn/bin:/home/erling/.config/yarn/global/node_modules/.bin:/home/erling/.autojump/bin:/home/erling/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-11-oracle/bin:/usr/lib/jvm/java-11-oracle/db/bin:/home/erling/.vimpkg/bin"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

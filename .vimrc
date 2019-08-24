@@ -1,3 +1,4 @@
+
 " General settings------------------------------------------------------------
   syntax on                                         " turn on syntax
   let mapleader = ","                               " map leader to ','
@@ -12,7 +13,7 @@
   set autoindent                                    " turns on auto indent
   set smartindent                                   " does (mostly) right indenting
   set tabstop=2                                     " tabs are at proper location
-  set shiftwidth=4                                  " one tab are 2 spaces
+  set shiftwidth=4                                  " one tab are 4 spaces
   set expandtab                                     " tabs are actually spaces
   set smarttab                                      " tabs fit with tabstops
   set hlsearch                                      " highlight all matching text
@@ -33,7 +34,7 @@
   noremap <Right> <NOP>
   noremap <C-l> :bn<CR>
   noremap <C-h> :bp<CR>
-  noremap <C-j> :bd<CR>
+  noremap <C-j> :bp<cr>:bd #<cr>
   noremap dl d$
   noremap dh d0
   noremap el $
@@ -46,11 +47,12 @@
   vnoremap < <gv
   vnoremap . :normal .<CR>
   vnoremap ' :normal @a<CR>
+
+
   
 
 " fix copy/paste outside of vim
-  noremap <C-c> :!echo <C-r><C-w>\| xsel -ib<cr><cr>
-  vnoremap <C-c> :w !xsel -ib<cr><cr>
+  vnoremap <C-c> "+y
 
 
 " Vundel plugin manager config------------------------------------------------
@@ -58,27 +60,22 @@
   filetype off                                      " required for vundle
   set rtp+=~/.vim/bundle/Vundle.vim                 " runtime path
   call vundle#begin('~/.vim/bundle')                " START ADDING PLUGINS
+  Plugin 'jremmen/vim-ripgrep'                      " ripgrep support in vim
   Plugin 'VundleVim/Vundle.vim'                     " main vundle plugin
-  Plugin 'joshdick/onedark.vim'                     " onedark style
+  Plugin 'kristijanhusak/vim-hybrid-material'       " colourscheme
+  Plugin 'pangloss/vim-javascript'                  "better javascript highlighting
   Plugin 'sheerun/vim-polyglot'                     " syntax
-  Plugin 'leafgarland/typescript-vim'
-  Plugin 'dikiaap/minimalist'
-  Plugin 'itchyny/vim-gitbranch'                    " git for statusline
-  Plugin 'vim-airline/vim-airline'                  "  statusline
+  Plugin 'vim-airline/vim-airline'                  " statusline
   Plugin 'vim-airline/vim-airline-themes'
+  Plugin 'Raimondi/delimitMate'                     " autocomplete for paranthesis and brackets
   Plugin 'scrooloose/nerdtree'                      " document tree
   Plugin 'jistr/vim-nerdtree-tabs'                  " document tree tabs
   Plugin 'Xuyuanp/nerdtree-git-plugin'              " git flags
   Plugin 'mbbill/undotree'                          " list all undos you can do
   Plugin 'airblade/vim-gitgutter'                   " show vim diff in gutter
   Plugin 'mxw/vim-jsx'                              " allow jsx syntax
-  Plugin 'ctrlpvim/ctrlp.vim'                       " beloved fuzzyfinder
   Plugin 'w0rp/ale'                                 " support linting
-  Plugin 'JuliaEditorSupport/julia-vim'             " julia support
-  Plugin 'airblade/vim-rooter'                      " always get root folder
-  Plugin 'fatih/vim-go'                             " go support
-  Plugin 'Raimondi/delimitMate'                     " autocomplete for paranthesis and brackets
-  Plugin 'alvan/vim-closetag'
+  Plugin 'alvan/vim-closetag'                       " html tag completion
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " use fzf in vim
   Plugin 'junegunn/fzf.vim'                          
 
@@ -86,23 +83,19 @@
   Plugin 'roxma/nvim-yarp'
   Plugin 'roxma/vim-hug-neovim-rpc'
   Plugin 'deoplete-plugins/deoplete-jedi'           
-  Plugin 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-  Plugin 'ternjs/tern_for_vim'
-
   call vundle#end()                                 " STOP ADDING PLUGINS
   filetype plugin indent on                         " turn back on again
 " ----------------------------------------------------------------------------
-
+"
 " Airline
   let g:airline#extensions#tabline#enabled = 1
   let g:airline_section_z = ''
-
+  let g:airline#extensions#ale#enabled = 1
 
 " Theme settings
-  let g:spacegray_termcolors = 256
-  set t_Co=256
-  colorscheme minimalist
-  let g:spacegray_underline_search = 1
+  set background=dark
+  colorscheme hybrid_material
+  let g:airline_theme = "hybrid"
   
 " Using vim tree to make vim more user friendly-------------------------------
   map <LEADER>, :NERDTreeTabsToggle<CR>
@@ -113,6 +106,7 @@
   let g:NERDTreeWinSize = 30
   let NERDTreeShowHidden = 1
   let NERDTreeQuitOnOpen = 0
+  map <leader>r :NERDTreeFind<cr>
   autocmd vimenter * NERDTree
   autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
   autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
@@ -133,61 +127,44 @@
 " Ale settings---------------------------------------------------------------
   let g:ale_fixers = {
     \  'javascript': ['prettier'],
+    \  'typescript': ['prettier'],
     \  'python': ['yapf'], 
     \}
   let g:ale_linters = {
     \ 'javascript': ['eslint'], 
+    \ 'typescript': ['eslint'], 
+    \ 'python': ['pylint'],
     \}
   let g:ale_fix_on_save = 1
   let g:ale_sign_column_always = 1
   let g:ale_lint_on_text_changed = 'never'
-
-" CTRLP .ignore files/folders
-  let g:ctrlp_max_files = 0
-  set wildignore+=*/venv/*,*/target/*,*/node_modules/*,*/*.class,*/*.pyc,*/*.o
-  let g:ctrlp_prompt_mappings = {
-    \ 'AcceptSelection("e")': ['<c-t>'],
-    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-    \ }
-  let g:ale_pattern_options = {
-  \   '.*\.java$': {'ale_enabled': 0},
-  \}
-
-" Other stuff
-  hi VertSplit ctermbg=234 ctermfg=234
-
-" delimitMate
-  let delimitMate_expand_space = 1 "turns on expand space
-  let delimitMate_expand_cr = 1 "turns on expand cr
+  let g:ale_linters_explicit = 1
+  let g:ale_sign_error = '●'
+  let g:ale_sign_warning = '●'
+  highlight ALEErrorSign ctermbg=NONE ctermfg=red
+  highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 " Autocomplete
   let g:deoplete#enable_at_startup = 1
   let g:neosnippet#enable_completed_snippet = 1
-  let g:deoplete#omni#functions = {}
-  let g:deoplete#omni#functions.python = [
-        \ 'jedi#Complete',
-        \ 'jspc#omni' 
-        \]
-  let g:deoplete#omni#functions.javascript = [
-        \ 'tern#Complete',
-        \ 'jspc#omni' 
-  \]
-  set completeopt-=preview
   inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-
-  let g:deoplete#sources#ternjs#types = 1
-  let g:deoplete#sources#ternjs#docs = 1
-
-
-" Use tern_for_vim.
-	let g:tern#command = ["tern"]
-	let g:tern#arguments = ["--persistent"]
-
-" html completion
-  let g:closetag_filenames = '*.html,*.xhtml,*.phtml, *.js'
+  set completeopt-=preview
 
 " better java highlighting
   let g:java_highlight_functions = 1
 
 " make vim use pyxversion3
   set pyxversion=3                                                                     
+
+" Other stuff
+  hi VertSplit ctermbg=234 ctermfg=234
+
+" html completion
+  let g:closetag_filenames = '*.html,*.xhtml,*.phtml, *.js'
+
+" delimitMate
+  let delimitMate_expand_space = 1 "turns on expand space
+  let delimitMate_expand_cr = 1 "turns on expand cr
+
+ 
+
