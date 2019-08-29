@@ -24,7 +24,7 @@
 
 " General mappings------------------------------------------------------------
   nmap <silent> <leader>b :noh<CR>
-  map <leader>s :setlocal spell! spelllang=en_us<CR>
+  map <leader>l :setlocal spell! spelllang=en_us<CR>
   noremap <leader><space> :Buffers<CR>
   noremap! <C-BS> <C-w>
   noremap! <C-h> <C-w>
@@ -48,19 +48,14 @@
   vnoremap . :normal .<CR>
   vnoremap ' :normal @a<CR>
 
-
-  
-
 " fix copy/paste outside of vim
   vnoremap <C-c> "+y
-
 
 " Vundel plugin manager config------------------------------------------------
   set nocompatible                                  " required for vundle
   filetype off                                      " required for vundle
   set rtp+=~/.vim/bundle/Vundle.vim                 " runtime path
-  call vundle#begin('~/.vim/bundle')                " START ADDING PLUGINS
-  Plugin 'jremmen/vim-ripgrep'                      " ripgrep support in vim
+  call vundle#begin('~/.vim/bundle')                " START ADDING PLUGgNS
   Plugin 'VundleVim/Vundle.vim'                     " main vundle plugin
   Plugin 'kristijanhusak/vim-hybrid-material'       " colourscheme
   Plugin 'pangloss/vim-javascript'                  "better javascript highlighting
@@ -78,19 +73,15 @@
   Plugin 'alvan/vim-closetag'                       " html tag completion
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " use fzf in vim
   Plugin 'junegunn/fzf.vim'                          
-
-  Plugin 'Shougo/deoplete.nvim'                     " autocomplete
-  Plugin 'roxma/nvim-yarp'
-  Plugin 'roxma/vim-hug-neovim-rpc'
-  Plugin 'deoplete-plugins/deoplete-jedi'           
+  Plugin 'neoclide/coc.nvim', {'branch': 'release'}  " Autocomplete
   call vundle#end()                                 " STOP ADDING PLUGINS
   filetype plugin indent on                         " turn back on again
 " ----------------------------------------------------------------------------
 "
 " Airline
   let g:airline#extensions#tabline#enabled = 1
-  let g:airline_section_z = ''
   let g:airline#extensions#ale#enabled = 1
+  let g:airline#extensions#coc#enabled = 1
 
 " Theme settings
   set background=dark
@@ -128,7 +119,7 @@
   let g:ale_fixers = {
     \  'javascript': ['prettier'],
     \  'typescript': ['prettier'],
-    \  'python': ['yapf'], 
+    \  'python': ['autopep8'],
     \}
   let g:ale_linters = {
     \ 'javascript': ['eslint'], 
@@ -144,11 +135,17 @@
   highlight ALEErrorSign ctermbg=NONE ctermfg=red
   highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
-" Autocomplete
-  let g:deoplete#enable_at_startup = 1
-  let g:neosnippet#enable_completed_snippet = 1
-  inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-  set completeopt-=preview
+" Autocomplete  
+  autocmd FileType json syntax match Comment +\/\/.\+$+
+	function! s:check_back_space() abort
+		let col = col('.') - 1
+		return !col || getline('.')[col - 1]  =~ '\s'
+	endfunction
+
+	inoremap <silent><expr> <Tab>
+					\ pumvisible() ? "\<C-n>" :
+					\ <SID>check_back_space() ? "\<Tab>" :
+					\ coc#refresh()
 
 " better java highlighting
   let g:java_highlight_functions = 1
@@ -166,5 +163,13 @@
   let delimitMate_expand_space = 1 "turns on expand space
   let delimitMate_expand_cr = 1 "turns on expand cr
 
- 
+" Fzf / ripgrep settings
+    nnoremap <LEADER>s :GFiles<CR>
+    nnoremap <LEADER>r :Rg<CR>
+        command! -bang -nargs=* Rg
+        \ call fzf#vim#grep(
+        \   'rg --color always --line-number --column --line-number --hidden --glob !flow-typed/* --glob !*.lock --glob !.git/* --ignore-case '.shellescape(<q-args>), 1,
+        \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+        \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+        \   <bang>0) 
 
