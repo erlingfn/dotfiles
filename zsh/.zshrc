@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:/usr/local/bin$PATH
 
 # Path to your oh-my-zsh installation.
   export ZSH="/home/erling/.oh-my-zsh"
@@ -72,6 +72,7 @@ plugins=(
   git
   zsh-autosuggestions
   zsh-syntax-highlighting
+  dotenv
 )
 
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && . ~/.autojump/etc/profile.d/autojump.sh #enable autojump
@@ -104,7 +105,7 @@ prompt_end() {
 # export LANG=en_US.UTF-8
 #
 # Enable 256 colours
-export TERM=xterm-256color
+export TERM=screen-256color
 
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then
@@ -126,3 +127,5 @@ export TERM=xterm-256color
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PASSWORD_STORE_DIR="/home/erling/koding/webkom"
+export PASSWORD_STORE_DIR="/home/erling/koding/webkom/password-store"

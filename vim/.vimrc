@@ -3,6 +3,7 @@
   syntax on                                         " turn on syntax
   let mapleader = ","                               " map leader to ','
   filetype indent on                                " indent based on file type
+  set redrawtime=10000                              " Ensure vim works on larger files
   set encoding=utf8                                 " UTF8 encoding of file
   set number                                        " normal line numbers
   set ttimeoutlen=10                                " used for key code delays
@@ -21,6 +22,8 @@
   set ignorecase                                    " /the -> the/The/THE/tHe
   set smartcase                                     " goes together with ignorecase
   set hidden                                        " open new buffer without saving
+  set updatetime=300                                " update diagnostic messages more often
+  set shortmess+=c                                  
 
 " General mappings------------------------------------------------------------
   nmap <silent> <leader>b :noh<CR>
@@ -35,7 +38,6 @@
   noremap <C-l> :bn<CR>
   noremap <C-h> :bp<CR>
   noremap <C-j> :bp<cr>:bd #<cr>
-  noremap dl d$
   noremap dh d0
   noremap el $
   noremap eh 0<left>
@@ -57,23 +59,23 @@
   set rtp+=~/.vim/bundle/Vundle.vim                 " runtime path
   call vundle#begin('~/.vim/bundle')                " START ADDING PLUGgNS
   Plugin 'VundleVim/Vundle.vim'                     " main vundle plugin
-  Plugin 'kristijanhusak/vim-hybrid-material'       " colourscheme
-  Plugin 'pangloss/vim-javascript'                  "better javascript highlighting
+  Plugin 'morhetz/gruvbox'                          " colourscheme
+  Plugin 'sainnhe/gruvbox-material'                 " colourscheme
+  Plugin 'pangloss/vim-javascript'                  " better javascript highlighting
   Plugin 'sheerun/vim-polyglot'                     " syntax
   Plugin 'vim-airline/vim-airline'                  " statusline
-  Plugin 'vim-airline/vim-airline-themes'
+  Plugin 'vim-airline/vim-airline-themes'           " themes for statusline
   Plugin 'Raimondi/delimitMate'                     " autocomplete for paranthesis and brackets
   Plugin 'scrooloose/nerdtree'                      " document tree
   Plugin 'jistr/vim-nerdtree-tabs'                  " document tree tabs
   Plugin 'Xuyuanp/nerdtree-git-plugin'              " git flags
   Plugin 'mbbill/undotree'                          " list all undos you can do
   Plugin 'airblade/vim-gitgutter'                   " show vim diff in gutter
-  Plugin 'mxw/vim-jsx'                              " allow jsx syntax
   Plugin 'w0rp/ale'                                 " support linting
   Plugin 'alvan/vim-closetag'                       " html tag completion
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " use fzf in vim
   Plugin 'junegunn/fzf.vim'                          
-  Plugin 'neoclide/coc.nvim', {'branch': 'release'}  " Autocomplete
+  Plugin 'neoclide/coc.nvim', {'branch': 'release'} " Autocomplete
   call vundle#end()                                 " STOP ADDING PLUGINS
   filetype plugin indent on                         " turn back on again
 " ----------------------------------------------------------------------------
@@ -84,13 +86,20 @@
   let g:airline#extensions#coc#enabled = 1
 
 " Theme settings
+  if exists('+termguicolors')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+  endif
+  syntax enable
   set background=dark
-  colorscheme hybrid_material
-  let g:airline_theme = "hybrid"
+  colorscheme gruvbox-material
+  let g:airline_theme = "gruvbox_material"
+  let g:gruvbox_material_background = 'hard'
   
 " Using vim tree to make vim more user friendly-------------------------------
   map <LEADER>, :NERDTreeTabsToggle<CR>
-  map <leader>r :NERDTreeFind<cr>
+  map <leader>g :NERDTreeFind<cr>
   let NERDTreeMinimalUI = 1
   let NERDTreeDirArrows = 1
   let g:NERDTreeShowIgnoredStatus = 1
@@ -114,26 +123,34 @@
   let g:gitgutter_sign_removed = '|'
   let g:gitgutter_sign_removed_first_line = '__'
   let g:gitgutter_sign_modified_removed = '__'
+  let g:gitgutter_sign_priority = 0
+  let g:gitgutter_sign_column_highlight = 0
+  highlight GitGutterAdd    guifg=#009900 guibg=#282828 ctermfg=2
+  highlight GitGutterChange guifg=#bbbb00 guibg=#282828 ctermfg=3
+  highlight GitGutterDelete guifg=#ff2222 guibg=#282828 ctermfg=1
+  highlight SignColumn guibg=#282828
 
 " Ale settings---------------------------------------------------------------
   let g:ale_fixers = {
+    \  'c': ['clang-format'],
     \  'javascript': ['prettier'],
     \  'typescript': ['prettier'],
-    \  'python': ['autopep8'],
+    \  'python': ['black', 'isort'],
     \}
   let g:ale_linters = {
     \ 'javascript': ['eslint'], 
     \ 'typescript': ['eslint'], 
-    \ 'python': ['pylint'],
+    \ 'python': ['pylint', 'flake8'],
     \}
   let g:ale_fix_on_save = 1
+  let g:ale_lint_on_save = 1
   let g:ale_sign_column_always = 1
   let g:ale_lint_on_text_changed = 'never'
   let g:ale_linters_explicit = 1
   let g:ale_sign_error = '●'
   let g:ale_sign_warning = '●'
-  highlight ALEErrorSign ctermbg=NONE ctermfg=red
-  highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+  highlight ALEErrorSign guibg=#282828 ctermfg=red
+  highlight ALEWarningSign guibg=#282828 ctermfg=yellow
 
 " Autocomplete  
   autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -146,6 +163,13 @@
 					\ pumvisible() ? "\<C-n>" :
 					\ <SID>check_back_space() ? "\<Tab>" :
 					\ coc#refresh()
+
+" Vim javascript
+  let g:javascript_plugin_flow = 1
+
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+  nnoremap <leader>f :CocCommand document.renameCurrentWord
 
 " better java highlighting
   let g:java_highlight_functions = 1

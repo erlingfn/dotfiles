@@ -121,3 +121,5 @@ if ! shopt -oq posix; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export PASSWORD_STORE_DIR="/home/erling/koding/webkom"
+export PASSWORD_STORE_DIR="/home/erling/koding/webkom/password-store"
