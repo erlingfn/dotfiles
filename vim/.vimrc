@@ -3,18 +3,13 @@
   syntax on                                         " turn on syntax
   let mapleader = ","                               " map leader to ','
   filetype indent on                                " indent based on file type
-  set redrawtime=10000                              " Ensure vim works on larger files
-  set encoding=utf8                                 " UTF8 encoding of file
   set number                                        " normal line numbers
-  set ttimeoutlen=10                                " used for key code delays
-  set scrolloff=10                                  " always keep lines at end
   set mouse=a                                       " enable mouse movements
   set nowrap                                        " lines don't wrap
   set noswapfile                                    " no stupid .swp file
   set autoindent                                    " turns on auto indent
   set smartindent                                   " does (mostly) right indenting
   set tabstop=2                                     " tabs are at proper location
-  set shiftwidth=4                                  " one tab are 4 spaces
   set expandtab                                     " tabs are actually spaces
   set smarttab                                      " tabs fit with tabstops
   set hlsearch                                      " highlight all matching text
@@ -23,7 +18,7 @@
   set smartcase                                     " goes together with ignorecase
   set hidden                                        " open new buffer without saving
   set updatetime=300                                " update diagnostic messages more often
-  set shortmess+=c                                  
+  set shortmess+=c                                  " dont give ins-completion menu messages                                  
 
 " General mappings------------------------------------------------------------
   nmap <silent> <leader>b :noh<CR>
@@ -38,11 +33,6 @@
   noremap <C-l> :bn<CR>
   noremap <C-h> :bp<CR>
   noremap <C-j> :bp<cr>:bd #<cr>
-  noremap dh d0
-  noremap el $
-  noremap eh 0<left>
-  noremap yl y$
-  noremap yh y0
   inoremap <C-l> <esc>%%a
   inoremap << <><left>
   vnoremap > >gv
@@ -50,7 +40,7 @@
   vnoremap . :normal .<CR>
   vnoremap ' :normal @a<CR>
 
-" fix copy/paste outside of vim
+" fix copy/paste from outside of vim
   vnoremap <C-c> "+y
 
 " Vundel plugin manager config------------------------------------------------
@@ -59,6 +49,7 @@
   set rtp+=~/.vim/bundle/Vundle.vim                 " runtime path
   call vundle#begin('~/.vim/bundle')                " START ADDING PLUGgNS
   Plugin 'VundleVim/Vundle.vim'                     " main vundle plugin
+  Plugin 'tpope/vim-sleuth'                         " automatic tab width
   Plugin 'morhetz/gruvbox'                          " colourscheme
   Plugin 'sainnhe/gruvbox-material'                 " colourscheme
   Plugin 'pangloss/vim-javascript'                  " better javascript highlighting
@@ -72,7 +63,7 @@
   Plugin 'mbbill/undotree'                          " list all undos you can do
   Plugin 'airblade/vim-gitgutter'                   " show vim diff in gutter
   Plugin 'w0rp/ale'                                 " support linting
-  Plugin 'alvan/vim-closetag'                       " html tag completion
+  Plugin 'alvan/vim-closetag'                       " html autoclosing
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " use fzf in vim
   Plugin 'junegunn/fzf.vim'                          
   Plugin 'neoclide/coc.nvim', {'branch': 'release'} " Autocomplete
@@ -92,11 +83,11 @@
     set termguicolors
   endif
   syntax enable
+  let g:gruvbox_material_disable_italic_comment = 1
   set background=dark
   colorscheme gruvbox-material
   let g:airline_theme = "gruvbox_material"
-  let g:gruvbox_material_background = 'hard'
-  
+
 " Using vim tree to make vim more user friendly-------------------------------
   map <LEADER>, :NERDTreeTabsToggle<CR>
   map <leader>g :NERDTreeFind<cr>
@@ -118,16 +109,15 @@
   nnoremap <F5> :UndotreeToggle<cr>
 
 " Git gutter settings
-  let g:gitgutter_sign_added = '|'
-  let g:gitgutter_sign_modified = '|'
-  let g:gitgutter_sign_removed = '|'
-  let g:gitgutter_sign_removed_first_line = '__'
-  let g:gitgutter_sign_modified_removed = '__'
+  let g:gitgutter_sign_added = '+'
+  let g:gitgutter_sign_modified = '~'
+  let g:gitgutter_sign_removed = '-'
   let g:gitgutter_sign_priority = 0
   let g:gitgutter_sign_column_highlight = 0
   highlight GitGutterAdd    guifg=#009900 guibg=#282828 ctermfg=2
   highlight GitGutterChange guifg=#bbbb00 guibg=#282828 ctermfg=3
   highlight GitGutterDelete guifg=#ff2222 guibg=#282828 ctermfg=1
+  highlight GitGutterChangeDelete guifg=#ff2222 guibg=#282828 ctermfg=4
   highlight SignColumn guibg=#282828
 
 " Ale settings---------------------------------------------------------------
@@ -135,12 +125,15 @@
     \  'c': ['clang-format'],
     \  'javascript': ['prettier'],
     \  'typescript': ['prettier'],
-    \  'python': ['black', 'isort'],
+    \  'python': ['black', 'isort', 'autopep8'],
+    \  'markdown': ['prettier'],
+    \  'java': ['google_java_format'],
     \}
   let g:ale_linters = {
     \ 'javascript': ['eslint'], 
     \ 'typescript': ['eslint'], 
-    \ 'python': ['pylint', 'flake8'],
+    \ 'python': ['flake8'],
+    \ 'markdown': ['mdl'],
     \}
   let g:ale_fix_on_save = 1
   let g:ale_lint_on_save = 1
@@ -149,8 +142,8 @@
   let g:ale_linters_explicit = 1
   let g:ale_sign_error = '●'
   let g:ale_sign_warning = '●'
-  highlight ALEErrorSign guibg=#282828 ctermfg=red
-  highlight ALEWarningSign guibg=#282828 ctermfg=yellow
+  highlight ALEErrorSign guibg=#282828 guifg=red
+  highlight ALEWarningSign guibg=#282828 guifg=yellow
 
 " Autocomplete  
   autocmd FileType json syntax match Comment +\/\/.\+$+
@@ -186,6 +179,7 @@
 " delimitMate
   let delimitMate_expand_space = 1 "turns on expand space
   let delimitMate_expand_cr = 1 "turns on expand cr
+  let delimitMate_matchpairs = "(:),[:],{:}"
 
 " Fzf / ripgrep settings
     nnoremap <LEADER>s :GFiles<CR>
