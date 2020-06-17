@@ -125,7 +125,20 @@ export TERM=screen-256color
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+webapp=~/koding/webkom/lego-webapp
+lego=~/koding/webkom/lego
+alias lego='cd $lego'
+alias webapp='cd $webapp'
+alias erling='cd ~/'
+alias gotop=gotop-cjbassi
+alias ..='cd ..'
+function nwdir(){
+    mkdir "$1"
+    cd "$1"
+}
 
+#if [ /snap/bin/kubectl  ]; then source <(kubectl completion zsh); fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 export PASSWORD_STORE_DIR="/home/erling/koding/webkom"
 export PASSWORD_STORE_DIR="/home/erling/koding/webkom/password-store"
