@@ -123,12 +123,13 @@
 
 " Ale settings---------------------------------------------------------------
   let g:ale_fixers = {
-    \  'c': ['clang-format'],
+    \  'c': [],
     \  'javascript': ['prettier'],
     \  'typescript': ['prettier'],
     \  'python': ['black', 'isort', 'autopep8'],
     \  'markdown': ['prettier'],
     \  'java': ['google_java_format'],
+    \  'scala': ['scalafmt'],
     \}
   let g:ale_linters = {
     \ 'javascript': ['eslint'], 
