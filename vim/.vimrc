@@ -53,6 +53,7 @@
   Plugin 'morhetz/gruvbox'                          " colourscheme
   Plugin 'sainnhe/gruvbox-material'                 " colourscheme
   Plugin 'pangloss/vim-javascript'                  " better javascript highlighting
+  Plugin 'Procrat/oz.vim'                           " Oz syntax highlighting
   Plugin 'sheerun/vim-polyglot'                     " syntax
   Plugin 'vim-airline/vim-airline'                  " statusline
   Plugin 'vim-airline/vim-airline-themes'           " themes for statusline
