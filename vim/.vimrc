@@ -94,7 +94,7 @@
   map <leader>g :NERDTreeFind<cr>
   let NERDTreeMinimalUI = 1
   let NERDTreeDirArrows = 1
-  let g:NERDTreeShowIgnoredStatus = 1
+  let g:NERDTreeGitStatusShowIgnored = 1
   let g:NERDTreeWinSize = 30
   let NERDTreeShowHidden = 1
   let NERDTreeQuitOnOpen = 0
@@ -187,7 +187,7 @@
     nnoremap <LEADER>r :Rg<CR>
         command! -bang -nargs=* Rg
         \ call fzf#vim#grep(
-        \   'rg --color always --line-number --column --line-number --hidden --glob !flow-typed/* --glob !*.lock --glob !.git/* --ignore-case '.shellescape(<q-args>), 1,
+        \   "rg --color always --line-number --column --line-number --hidden --glob '!flow-typed/*' --glob '!*.lock' --glob '!.git/*' --ignore-case ".shellescape(<q-args>), 1,
         \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
         \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
         \   <bang>0) 
