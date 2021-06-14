@@ -1,28 +1,28 @@
 
 " General settings------------------------------------------------------------
-  syntax on                                         " turn on syntax
-  let mapleader = ","                               " map leader to ','
-  filetype indent on                                " indent based on file type
-  set number                                        " normal line numbers
-  set mouse=a                                       " enable mouse movements
-  set nowrap                                        " lines don't wrap
-  set noswapfile                                    " no stupid .swp file
-  set autoindent                                    " turns on auto indent
-  set smartindent                                   " does (mostly) right indenting
-  set tabstop=2                                     " tabs are at proper location
-  set expandtab                                     " tabs are actually spaces
-  set smarttab                                      " tabs fit with tabstops
-  set hlsearch                                      " highlight all matching text
-  set incsearch                                     " enable incremental search
-  set ignorecase                                    " /the -> the/The/THE/tHe
-  set smartcase                                     " goes together with ignorecase
-  set hidden                                        " open new buffer without saving
-  set updatetime=300                                " update diagnostic messages more often
-  set shortmess+=c                                  " dont give ins-completion menu messages                                  
+  syntax on                                                 " turn on syntax
+  let mapleader = ","                                       " map leader to ','
+  filetype indent on                                        " indent based on file type
+  set number                                                " normal line numbers
+  set mouse=a                                               " enable mouse movements
+  set nowrap                                                " lines don't wrap
+  set noswapfile                                            " no stupid .swp file
+  set autoindent                                            " turns on auto indent
+  set smartindent                                           " does (mostly) right indenting
+  set tabstop=2                                             " tabs are at proper location
+  set expandtab                                             " tabs are actually spaces
+  set smarttab                                              " tabs fit with tabstops
+  set hlsearch                                              " highlight all matching text
+  set incsearch                                             " enable incremental search
+  set ignorecase                                            " /the -> the/The/THE/tHe
+  set smartcase                                             " goes together with ignorecase
+  set hidden                                                " open new buffer without saving
+  set updatetime=300                                        " update diagnostic messages more often
+  set shortmess+=c                                          " dont give ins-completion menu messages
+  set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:· " trailing spaces, tabs etc
 
 " General mappings------------------------------------------------------------
   nmap <silent> <leader>b :noh<CR>
-  map <leader>l :setlocal spell! spelllang=en_us<CR>
   noremap <leader><space> :Buffers<CR>
   noremap! <C-BS> <C-w>
   noremap! <C-h> <C-w>
@@ -77,6 +77,11 @@
   let g:airline#extensions#ale#enabled = 1
   let g:airline#extensions#coc#enabled = 1
 
+" Matchit
+	if has('syntax') && has('eval')
+	  packadd! matchit
+	endif
+
 " Theme settings
   if exists('+termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -123,9 +128,11 @@
 
 " Ale settings---------------------------------------------------------------
   let g:ale_fixers = {
-    \  'c': [],
+    \  'c': ['clang-format'],
+    \  'c++': ['clang-format'],
     \  'javascript': ['prettier'],
     \  'typescript': ['prettier'],
+    \  'typescriptreact': ['prettier'],
     \  'python': ['black', 'isort', 'autopep8'],
     \  'markdown': ['prettier'],
     \  'java': ['google_java_format'],
@@ -136,6 +143,8 @@
     \ 'typescript': ['eslint'], 
     \ 'python': ['flake8'],
     \ 'markdown': ['mdl'],
+    \ 'c': ['cc'],
+    \ 'c++': ['cc'],
     \}
   let g:ale_fix_on_save = 1
   let g:ale_lint_on_save = 1
@@ -144,6 +153,7 @@
   let g:ale_linters_explicit = 1
   let g:ale_sign_error = '●'
   let g:ale_sign_warning = '●'
+  let g:ale_c_clangformat_options = '--style=Mozilla'
   highlight ALEErrorSign guibg=#282828 guifg=red
   highlight ALEWarningSign guibg=#282828 guifg=yellow
 

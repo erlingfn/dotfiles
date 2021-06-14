@@ -130,7 +130,6 @@ webapp=~/koding/webkom/lego-webapp
 lego=~/koding/webkom/lego
 alias lego='cd $lego'
 alias webapp='cd $webapp'
-alias erling='cd ~/'
 alias gotop=gotop-cjbassi
 alias ..='cd ..'
 function nwdir(){
